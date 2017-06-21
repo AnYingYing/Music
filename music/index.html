@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8"/>
+	<title>简易音乐播放器</title>
+	<style>
+		li{
+			list-style-type:none;
+			margin:5px;
+		}
+		a{
+			text-decoration:none;
+			color:blue;
+		}
+		#musicTitle{
+			font-size:30px;
+		}
+	</style>
+	<script src="jquery-1-7-2.js"></script>
+	<script src="ajax.js"></script>
+	 
+	<script>
+		
+		//音乐资源
+		var myMusics = new Array();	
+
+		//数组下标
+			var index = -1;	
+			//播放状态 单曲循环：0 列表循环：1 随机播放：2
+			var playState = 1;
+			//创建音乐列表
+			function createBox(){
+				var html="";
+				for(var i=0;i<myMusics.length;i++){
+					html+="<li>"+(i+1)+"  <a href='javascript:clickName("+i+");'>"+myMusics[i].title+"</a></li>"
+				}
+				return html
+			}
+
+		function success(data){
+			eval("var dataArr = " + data);
+
+			//alert(dataArr);
+
+			myMusics = dataArr;
+
+			//初始化
+			$.getScript("init.js");
+
+			
+		}
+
+		//自定义封装请求函数
+		ht.ajax("data.json",success);
+
+	</script>
+	
+	</head>
+	
+	<body>	
+		<audio id="media" src="" autoplay="autoplay"  onended="playMusic(1,0)" ontimeupdate="timeupdate()" ></audio>
+		
+		<div style="float:left;margin-left:50px;width:450px;height:200px;">
+				<p id="musicTitle"></p>
+				<p id="currTime" >当前：00:00:00</p>
+				<p id="totalTime" >时长：00:00:00</p>
+				
+				<input id="lastMusic" type="button" value="上一首" />
+				<input id="rewind" type="button" value="<<" />
+				<input id="playMusic" type="button" value="暂停" />
+				<input id="fast" type="button" value=">>" />
+				<input id="nextMusic" type="button" value="下一首" />
+				<select id="playState">
+					<option value="0">单曲循环</option>
+					<option value="1" selected>列表循环</option>
+					<option value="2">随机播放</option>
+				</select>
+				<ul id="box" style="border:1px solid black;padding:0px;height:300px;width:300px;overflow-y:auto;"></ul>
+		</div>
+		<div style="text-align:center;">
+
+</div>
+
+	</body>
+</html>
